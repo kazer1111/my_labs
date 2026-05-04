@@ -8,3 +8,11 @@ class DuplicateIDError(Exception):
 
 class RecordNotFoundError(Exception):
     pass
+
+
+class InvalidStorageDataError(Exception):
+    pass
+
+
+class StorageFileError(Exception):
+    pass

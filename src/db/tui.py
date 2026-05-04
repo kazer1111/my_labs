@@ -1,11 +1,33 @@
-from .backend.errors import DuplicateIDError, InvalidAgeError, RecordNotFoundError
-from .backend.memory import StudentTable
+from .backend.csv_file import CsvStudentTable
+from .backend.errors import (
+    DuplicateIDError,
+    InvalidAgeError,
+    InvalidStorageDataError,
+    RecordNotFoundError,
+    StorageFileError,
+)
+from .backend.file import FileStudentTable
+from .backend.memory import MemoryStudentTable
 
 
 class StudentTUI:
     def __init__(self):
-        self.table = StudentTable()
+        self.table = self._select_table()
 
+    def _select_table(self):
+        print("Выберите тип базы данных")
+        print("1. In-memory")
+        print("2. JSON file")
+        print("3. CSV file")
+
+        choice = input("Введите номер: ").strip()
+
+        if choice == "2":
+            return FileStudentTable()
+        if choice == "3":
+            return CsvStudentTable()
+
+        return MemoryStudentTable()
 
     def _print_menu(self):
         print("\n=== База студентов ===")
@@ -43,6 +65,9 @@ class StudentTUI:
         for record in records:
             print(record)
 
+    def _print_error(self, error):
+        print("Ошибка:", error)
+
     def _add_student(self):
         print("\nДобавление записи")
         student_id = self._read_int("id: ")
@@ -54,13 +79,17 @@ class StudentTUI:
         try:
             record = self.table.create_record(student_id, first_name, second_name, age, sex)
             print("Запись добавлена:", record)
-        except (InvalidAgeError, DuplicateIDError) as e:
-            print("Ошибка:", e)
+        except (InvalidAgeError, DuplicateIDError, InvalidStorageDataError, StorageFileError) as e:
+            self._print_error(e)
 
     def _show_all_students(self):
         print("\nСписок записей")
-        records = self.table.select_record()
-        self._print_records(records)
+
+        try:
+            records = self.table.select_record()
+            self._print_records(records)
+        except (InvalidStorageDataError, StorageFileError) as e:
+            self._print_error(e)
 
     def _find_students_by_filter(self):
         print("\nПоиск по фильтру")
@@ -79,8 +108,11 @@ class StudentTUI:
         if sex == "":
             sex = None
 
-        records = self.table.select_record(student_id, first_name, second_name, age, sex)
-        self._print_records(records)
+        try:
+            records = self.table.select_record(student_id, first_name, second_name, age, sex)
+            self._print_records(records)
+        except (InvalidStorageDataError, StorageFileError) as e:
+            self._print_error(e)
 
     def _update_student(self):
         print("\nОбновление записи")
@@ -103,8 +135,14 @@ class StudentTUI:
         try:
             record = self.table.update_record(student_id, first_name, second_name, age, sex, new_id)
             print("Запись обновлена:", record)
-        except (InvalidAgeError, DuplicateIDError, RecordNotFoundError) as e:
-            print("Ошибка:", e)
+        except (
+            InvalidAgeError,
+            DuplicateIDError,
+            RecordNotFoundError,
+            InvalidStorageDataError,
+            StorageFileError,
+        ) as e:
+            self._print_error(e)
 
     def _delete_student(self):
         print("\nУдаление записи")
@@ -113,8 +151,8 @@ class StudentTUI:
         try:
             record = self.table.delete_record(student_id)
             print("Запись удалена:", record)
-        except RecordNotFoundError as e:
-            print("Ошибка:", e)
+        except (RecordNotFoundError, InvalidStorageDataError, StorageFileError) as e:
+            self._print_error(e)
 
     def run(self):
         while True:

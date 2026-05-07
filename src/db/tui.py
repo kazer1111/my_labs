@@ -6,7 +6,6 @@ class StudentTUI:
     def __init__(self):
         self.table = StudentTable()
 
-
     def _print_menu(self):
         print("\n=== База студентов ===")
         print("1. Добавить запись")
@@ -16,7 +15,7 @@ class StudentTUI:
         print("5. Удалить запись")
         print("0. Выход")
 
-    def _read_int(self, prompt ):
+    def _read_int(self, prompt):
         while True:
             raw = input(prompt).strip()
             try:
@@ -35,10 +34,9 @@ class StudentTUI:
                 print("Ошибка: введите целое число или оставьте поле пустым")
 
     def _print_records(self, records):
-        if records==[]:
+        if records == []:
             print("Записи не найдены")
             return
-
 
         for record in records:
             print(record)
@@ -72,9 +70,9 @@ class StudentTUI:
         age = self._read_optional_int("age: ")
         sex = input("sex: ").strip()
 
-        if first_name=="":
+        if first_name == "":
             first_name = None
-        if second_name=="":
+        if second_name == "":
             second_name = None
         if sex == "":
             sex = None
@@ -101,7 +99,9 @@ class StudentTUI:
             sex = None
 
         try:
-            record = self.table.update_record(student_id, first_name, second_name, age, sex, new_id)
+            record = self.table.update_record(
+                student_id, first_name, second_name, age, sex, new_id
+            )
             print("Запись обновлена:", record)
         except (InvalidAgeError, DuplicateIDError, RecordNotFoundError) as e:
             print("Ошибка:", e)
@@ -121,9 +121,9 @@ class StudentTUI:
             self._print_menu()
             action = input("Выберите действие: ").strip()
 
-            if action=="1":
+            if action == "1":
                 self._add_student()
-            elif action=="2":
+            elif action == "2":
                 self._show_all_students()
             elif action == "3":
                 self._find_students_by_filter()

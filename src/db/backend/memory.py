@@ -1,12 +1,11 @@
 Student = []
 
 
-
-def create_record(student_id,first_name,second_name,age,sex):
+def create_record(student_id, first_name, second_name, age, sex):
     if age < 0:
         raise ValueError("Возраст не может быть отрицательным")
 
-    for record in Student :
+    for record in Student:
         if record[0] == student_id:
             raise ValueError("Запись с таким id уже существует")
 
@@ -22,11 +21,13 @@ def create_record(student_id,first_name,second_name,age,sex):
     return new_record
 
 
-def select_record(student_id=None,first_name=None,second_name=None,age=None,sex=None):
+def select_record(
+    student_id=None, first_name=None, second_name=None, age=None, sex=None
+):
     result = []
 
     for record in Student:
-        if student_id is not None and record[0]!=student_id:
+        if student_id is not None and record[0] != student_id:
             continue
 
         if first_name is not None and record[1] != first_name:
@@ -43,11 +44,12 @@ def select_record(student_id=None,first_name=None,second_name=None,age=None,sex=
 
         result.append(record)
 
-
     return result
 
 
-def update_record(student_id, first_name=None,second_name=None, age=None, sex=None,new_id=None):
+def update_record(
+    student_id, first_name=None, second_name=None, age=None, sex=None, new_id=None
+):
     for i in range(len(Student)):
         record = list(Student[i])
 
@@ -58,7 +60,7 @@ def update_record(student_id, first_name=None,second_name=None, age=None, sex=No
                         raise ValueError("Запись с таким id уже существует")
                 record[0] = new_id
 
-            if first_name is not None :
+            if first_name is not None:
                 record[1] = first_name.strip()
 
             if second_name is not None:
@@ -72,7 +74,6 @@ def update_record(student_id, first_name=None,second_name=None, age=None, sex=No
             if sex is not None:
                 record[4] = sex.strip()
 
-
             Student[i] = tuple(record)
             return Student[i]
 
@@ -80,7 +81,6 @@ def update_record(student_id, first_name=None,second_name=None, age=None, sex=No
 
 
 def delete_record(student_id):
-
     for i in range(len(Student)):
         if Student[i][0] == student_id:
             deleted_record = Student[i]

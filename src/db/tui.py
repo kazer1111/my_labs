@@ -1,7 +1,6 @@
 from .backend.memory import create_record, delete_record, select_record, update_record
 
 
-
 def _print_menu():
     print("\n=== База студентов ===")
     print("1. Добавить запись")
@@ -12,7 +11,7 @@ def _print_menu():
     print("0. Выход")
 
 
-def _read_int( prompt ):
+def _read_int(prompt):
     while True:
         raw = input(prompt).strip()
 
@@ -34,10 +33,9 @@ def _read_optional_int(prompt):
 
 
 def _print_records(records):
-    if records==[]:
+    if records == []:
         print("Записи не найдены")
         return
-
 
     for record in records:
         print(record)
@@ -68,16 +66,15 @@ def _find_students_by_filter():
     print("\nПоиск по фильтру")
     print("Если поле не нужно, просто нажмите Enter")
 
-
     student_id = _read_optional_int("id: ")
     first_name = input("first_name: ").strip()
     second_name = input("second_name: ").strip()
     age = _read_optional_int("age: ")
     sex = input("sex: ").strip()
 
-    if first_name=="":
+    if first_name == "":
         first_name = None
-    if second_name=="":
+    if second_name == "":
         second_name = None
     if sex == "":
         sex = None
@@ -115,7 +112,6 @@ def _delete_student():
     print("\nУдаление записи")
     student_id = _read_int("id записи, которую нужно удалить: ")
 
-
     try:
         record = delete_record(student_id)
         print("Запись удалена:", record)
@@ -128,9 +124,9 @@ def run():
         _print_menu()
         action = input("Выберите действие: ").strip()
 
-        if action=="1":
+        if action == "1":
             _add_student()
-        elif action=="2":
+        elif action == "2":
             _show_all_students()
         elif action == "3":
             _find_students_by_filter()
